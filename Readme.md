@@ -9,7 +9,27 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/michaeldcanady/servicenow-sdk-go/total?style=plastic)
 [![Code Climate](https://codeclimate.com/github/michaeldcanady/servicenow-sdk-go.svg)](https://codeclimate.com/github/michaeldcanady/servicenow-sdk-go)
 
+A Service-Now API client enabling Go programs to interact with Service-Now in a simple and uniform way
+
 ![servicenow-sdk-go](.github/servicenow-sdk-go_logo.png)
+
+## Supported Service-Now APIs
+
+| API     | Status |
+| ------- | ------ |
+| Tables  | ✔️      |
+| Another | ♻️      |
+| Another | ✖️      |
+| Another | 🆕      |
+
+---
+
+| Emoji | Meaning       |
+| ----- | ------------- |
+| ✔️     | Supported     |
+| 🆕     | Preview       |
+| ♻️     | In progress   |
+| ✖️     | Not supported |
 
 ## 1. Installation
 
@@ -20,6 +40,8 @@ go get github.com/michaeldcanady/servicenow-sdk-go
 ## 2. Getting Started
 
 ### 2.1 Create an AuthenticationProvider object
+
+Create a credential object.
 
 ```golang
 import (
@@ -47,8 +69,8 @@ import (
 )
 
 params := &servicenowsdkgo.TableRequestBuilderGetQueryParameters{
-		Limit: int32(1),
-	}
+        Limit: int32(1),
+}
 ```
 
 ### 2.4 Build request for table

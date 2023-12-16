@@ -7,7 +7,9 @@ import (
 
 // TableValue is the reflection interface to a table value.
 type TableValue struct {
-	value interface{}
+	value        interface{}
+	displayValue interface{}
+	link         string
 }
 
 // Deprecated: deprecated as of {version} please utilize `ToInt64`

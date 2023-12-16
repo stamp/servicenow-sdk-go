@@ -7,6 +7,46 @@ import (
 
 type value interface{}
 
+// int returns tV's underlying value, as an int64.
+func (tv value) int() (int64, error) {
+	switch v := tv.(type) {
+	case int:
+		return int64(v), nil
+	case int8:
+		return int64(v), nil
+	case int16:
+		return int64(v), nil
+	case int32:
+		return int64(v), nil
+	case int64:
+		return v, nil
+	default:
+		return 0, fmt.Errorf("unable to convert %T to int64", tv)
+	}
+}
+
+// float returns tV's underlying value, as a float64.
+func (tV value) float() (float64, error) {
+	switch v := tV.(type) {
+	case float32:
+		return float64(v), nil
+	case float64:
+		return v, nil
+	default:
+		return 0, fmt.Errorf("unable to convert %T to float64", tV)
+	}
+}
+
+// string returns tV's underlying value, as a string.
+func (tV value) string() (string, error) {
+	return convertType[string](tV)
+}
+
+// bool returns tV's underlying value, as a bool.
+func (tV value) bool() (bool, error) {
+	return convertType[bool](tV)
+}
+
 // TableValue is the reflection interface to a table value.
 type TableValue struct {
 	value        value
@@ -30,20 +70,7 @@ func (tV *TableValue) ToInt64() (int64, error) {
 
 // Int returns tV's underlying value, as an int64.
 func (tv *TableValue) Int() (int64, error) {
-	switch v := tv.preferredValue().(type) {
-	case int:
-		return int64(v), nil
-	case int8:
-		return int64(v), nil
-	case int16:
-		return int64(v), nil
-	case int32:
-		return int64(v), nil
-	case int64:
-		return v, nil
-	default:
-		return 0, fmt.Errorf("unable to convert %T to int64", tv.value)
-	}
+  return tv.preferredValue().int()
 }
 
 // Deprecated: deprecated as of {version} please utilize `ToFloat64`
@@ -55,14 +82,7 @@ func (tV *TableValue) ToFloat64() (float64, error) {
 
 // Float returns tV's underlying value, as a float64.
 func (tV *TableValue) Float() (float64, error) {
-	switch v := tV.preferredValue().(type) {
-	case float32:
-		return float64(v), nil
-	case float64:
-		return v, nil
-	default:
-		return 0, fmt.Errorf("unable to convert %T to float64", tV.value)
-	}
+  return tV.preferredValue().float()
 }
 
 // Deprecated: deprecated as of {version} please utilize `String`
@@ -74,7 +94,7 @@ func (tV *TableValue) ToString() (string, error) {
 
 // String returns tV's underlying value, as a string.
 func (tV *TableValue) String() (string, error) {
-	return convertType[string](tV.preferredValue())
+	return tV.preferredValue().string()
 }
 
 // Deprecated: deprecated as of {version} please utilize `Bool`
@@ -86,7 +106,7 @@ func (tV *TableValue) ToBool() (bool, error) {
 
 // Bool returns tV's underlying value, as a bool.
 func (tV *TableValue) Bool() (bool, error) {
-	return convertType[bool](tV.preferredValue())
+	return tV.preferredValue().bool()
 }
 
 // Deprecated: deprecated as of {version} please utilize `Type`

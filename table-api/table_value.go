@@ -5,12 +5,20 @@ import (
 	"reflect"
 )
 
+type value interface{}
+
 // TableValue is the reflection interface to a table value.
 type TableValue struct {
-	value        interface{}
-	displayValue interface{}
+	value        value
+	displayValue value
 	link         string
 }
+
+func (tV *TableValue) preferredValue() value {
+	if tV.displayValue != nil {
+		return tV.displayValue
+	}
+	return tV.value
 
 // Deprecated: deprecated as of {version} please utilize `ToInt64`
 //
@@ -22,7 +30,7 @@ func (tV *TableValue) ToInt64() (int64, error) {
 
 // Int returns tV's underlying value, as an int64.
 func (tv *TableValue) Int() (int64, error) {
-	switch v := tv.value.(type) {
+	switch v := tv.preferredValue().(type) {
 	case int:
 		return int64(v), nil
 	case int8:
@@ -47,7 +55,7 @@ func (tV *TableValue) ToFloat64() (float64, error) {
 
 // Float returns tV's underlying value, as a float64.
 func (tV *TableValue) Float() (float64, error) {
-	switch v := tV.value.(type) {
+	switch v := tV.preferredValue().(type) {
 	case float32:
 		return float64(v), nil
 	case float64:
@@ -66,7 +74,7 @@ func (tV *TableValue) ToString() (string, error) {
 
 // String returns tV's underlying value, as a string.
 func (tV *TableValue) String() (string, error) {
-	return convertType[string](tV.value)
+	return convertType[string](tV.preferredValue())
 }
 
 // Deprecated: deprecated as of {version} please utilize `Bool`
@@ -78,7 +86,7 @@ func (tV *TableValue) ToBool() (bool, error) {
 
 // Bool returns tV's underlying value, as a bool.
 func (tV *TableValue) Bool() (bool, error) {
-	return convertType[bool](tV.value)
+	return convertType[bool](tV.preferredValue())
 }
 
 // Deprecated: deprecated as of {version} please utilize `Type`
@@ -90,5 +98,5 @@ func (tV *TableValue) GetType() reflect.Type {
 
 // Type returns tV's underlying value type.
 func (tV *TableValue) Type() reflect.Type {
-	return reflect.TypeOf(tV.value)
+	return reflect.TypeOf(tV.preferredValue())
 }

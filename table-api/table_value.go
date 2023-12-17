@@ -47,6 +47,11 @@ func (tV value) bool() (bool, error) {
 	return convertType[bool](tV)
 }
 
+// type returns tV's underlying value type.
+func (tV value) type() reflect.Type {
+	return reflect.TypeOf(tV)
+}
+
 // TableValue is the reflection interface to a table value.
 type TableValue struct {
 	value        value
@@ -118,5 +123,5 @@ func (tV *TableValue) GetType() reflect.Type {
 
 // Type returns tV's underlying value type.
 func (tV *TableValue) Type() reflect.Type {
-	return reflect.TypeOf(tV.preferredValue())
+	return tV.preferredValue()
 }
